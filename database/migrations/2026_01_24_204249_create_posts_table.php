@@ -14,16 +14,16 @@ return new class extends Migration
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
             $table->text('title');
-            $table->text('content');
+            $table->text('post');
             $table->text('status');
-            $table->string('image');
-            $table->time('created_at');
+          //  $table->string('image');
+            $table->timestamps();
             $table->foreignId('user_id')
                   ->onDelete('cascade')
                   ->onUpdate('cascade')
                   ->constrained('users');
             $table->foreignId('category_id')
-                  ->nullOnUpdate()
+                  ->nullOnDelete()
                   ->cascadeOnUpdate()
                   ->nullable()
                   ->constrained('categories');
