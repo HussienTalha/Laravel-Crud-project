@@ -15,7 +15,7 @@ class PostController extends Controller
      */
     public function index()
     {
-       $posts = Post::with(['user:name','comment:comment,created_at','categories:category_name'])->get();
+       $posts = Post::with(['user:name','categories:category_name'])->get();
         return $posts; 
     }
 
@@ -38,7 +38,8 @@ class PostController extends Controller
                 'category_id' => 'required',
             ]);
 
-        auth()->user()->posts()->create($validated);
+        auth()->user()->posts()->create($validated + ['status' => 'created']);
+
                 
         return redirect('/')->with('success','post created');
     }
@@ -48,7 +49,7 @@ class PostController extends Controller
      */
     public function show(Post $post)
        {
-        $post =  $post->load(['user:name,email','category:category_name','comment:comment,created_at'])->get();
+        $post =  $post->load(['user:name,email','category:category_name']);
         return $post;
     }
 
@@ -73,7 +74,7 @@ class PostController extends Controller
                 'category' => 'required'
             ]
         );
-        $post->update($validated);
+        $post->update($validated + ['status' => 'edited']);
         return redirect('/')->with('success','post updated');
     }
 
