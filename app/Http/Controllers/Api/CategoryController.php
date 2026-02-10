@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CategoryController extends Controller
 {
@@ -23,6 +24,7 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
+        if(Auth::user()->role =='admin'){
         $validated = $request->validate(
             [
                 'category_name' => "required|string|unique",
@@ -30,6 +32,16 @@ class CategoryController extends Controller
         );
         $validated['category_name'] = ucwords($validated['category_name']);
         Category::create($validated);
+        return response()->json([
+            'message' =>'category created!'
+        ],201);
+        }
+        else{
+            return response()->json([
+                'message' => 'Unauthorized!'
+
+            ],403);
+        }
     }
 
     /**
@@ -37,7 +49,8 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        $category = $category->load(['posts:title,id,user_id','posts.user:name']);
+        $category = $category->load(['posts:id,title,user_id,category_id','posts.user:id,name']);
+       // $category_posts = $category->posts()->with(['user:id,name'])->get();
         $formated_category =[
              'id' => $category->id,   
              'category name' => $category->category_name,
@@ -50,10 +63,11 @@ class CategoryController extends Controller
                     'id' => $post->user_id,
                     'name' =>$post->user->name
                 ]
-             ];})
+             ];
+             })
              ];
         
-        return response()->json($formated_category);
+        return response()->json($formated_category,200);
     }
 
     /**
@@ -61,6 +75,7 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Post $post)
     {
+        if ($request->user()->role == 'admin'){
         $validated = $request->validate(
             [
                 'category_name' => 'required|unique'   
@@ -69,17 +84,26 @@ class CategoryController extends Controller
         $post->update($validated);
         return response()->json([
                'message' => 'category updated!',
-        ],200);
+        ],204);
+        }
+        return response()->json([
+            'message' => 'unauthorized!'
+        ],403);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Post $post)
+    public function delete(Post $post)
     {
+        if (Auth::user()->role =='admin'){
         $post->delete();
         return response()->json([
                'message' => 'category deleted !',
-        ],200);
+        ],201);
+        }
+        return response()->json([
+            'message' => 'unauthorized!'
+        ],403);
     }
 }
