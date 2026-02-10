@@ -12,23 +12,30 @@ use Illuminte\validation\ValidationException;
 class AuthController extends Controller
 {
     public function login(Request $request){
-        $validated = $request->validate([
-           'email' => 'required|string|exists', 
+        $credintials = $request->validate([
+           'email' => 'required|email',
+           'password' => 'required|min:8' 
         ]);
-         $user = User::where('id','=',$validated['email'])->first();
-         if ($user){
-         if(Hash::check($request->password, $user->password)){
-            $token = $request->user()->createToken('login_token');
+        
+        if(!Auth::attempt($credintials)) {
             return response()->json([
-                'token' => $token->plainTextToken
-            ],200);
-         }
-         }
-         else {
-            return response()->json([
-                   'message'=> 'wrong email!'
-            ],400);
-         }
+                   'message'=> 'wrong credintials!'
+            ],404);
+        }
+        $user = Auth::user();
+        if ($user->role == 'admin')
+            {
+                $token = $user->createToken("$user->name token", ['actions on category']);
+                return response()->json([
+                    'user' => $user,
+                    'token' => $token->plainTextToken
+                ],200);
+            }
+        $token = $user->createToken("$user->name token");
+        return response()->json([
+            'user' => $user,
+            'token' => $token->plainTextToken
+        ],200);
 
         
     }
@@ -37,19 +44,30 @@ class AuthController extends Controller
             [
                 'email' => 'required|email|unique:users|string|max:255',
                 'name' => 'required|string|max:255',
-                'password' =>'string|require|min:6|confirmed'
+                'password' =>'string|required|min:6|confirmed'
             ]
         );
         $user = User::create([
-            'email' => $validated->email,
-            'name' => $validated->name,
-            'password' => Hash::make($validated->password)
+            'email' => $validated['email'],
+            'name' => $validated['name'],
+            'password' => Hash::make($validated['password'])
         ]
         );
-        $token = $user->createToken('user_token');
+        if ($user->role == 'admin')
+            {
+                $token = $user->createToken("$user->name token",  ['Actions on Post','Actions on Category','Actions on User']);
+                return response()->json([
+                    'user' => $user,
+                    'token' => $token->plainTextToken,
+                    'abilities' => $user->currentAccessToken()->abilities
+                ],200);
+            }
+        $token = $user->createToken("$user->name toke", []);
         return response()->json([
-            'token' => $user->plainTextToken
-        ],201);
+            'user' => $user,
+            'token' => $token->plainTextToken,
+            'abilities' => $user->currentAccessToken()->abilities
+        ],200);
         
         
 
