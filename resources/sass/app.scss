@@ -1,8 +1,45 @@
-// Fonts
-@import url('https://fonts.bunny.net/css?family=Nunito');
+// BS5 Starter Kit - Main SASS Entry Point
+// Bootstrap 5 Toolkit
 
-// Variables
-@import 'variables';
+// =============================================================================
+// SASS DEPRECATION NOTICE
+// =============================================================================
+// The @import statements below generate deprecation warnings in SASS 1.80+
+// These warnings are primarily from Bootstrap 5's internal code, not this kit.
+// Bootstrap 6 will resolve these when it adopts the new @use/@forward syntax.
+// The warnings do not affect functionality and can be safely ignored.
+// =============================================================================
 
-// Bootstrap
+// 1. Configuration and helpers
+@import 'abstracts/variables';
+@import 'abstracts/functions';
+@import 'abstracts/mixins';
 @import 'bootstrap/scss/bootstrap';
+
+// 2. Vendors
+@import 'vendors/bootstrap';
+
+// 3. Base stuff
+@import 'base/reset';
+@import 'base/typography';
+@import 'base/helpers';
+
+// 4. Layout-related sections
+@import 'layout/header';
+@import 'layout/footer';
+@import 'layout/sidebar';
+@import 'layout/forms';
+
+// 5. Components
+@import 'components/buttons';
+@import 'components/cards';
+@import 'components/navigation';
+@import 'components/modal';
+@import 'components/alerts';
+
+// 6. Page-specific styles
+@import 'pages/home';
+
+// 7. Themes
+// Import theme files as needed
+// @import 'themes/theme';
