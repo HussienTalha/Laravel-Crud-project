@@ -12,16 +12,10 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        Category::all();
+        $categories = Category::all();
+        return $categories;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -35,7 +29,8 @@ class CategoryController extends Controller
             ]
         );
         $validated['category_name'] = ucwords($validated['category_name']);
-        auth()->user()->create($validated);
+        Category::create($validated);
+        return redirect('admin/dashboard')->with('success', 'Category Created!');
     }
 
     /**
@@ -43,20 +38,12 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        $category = $category->load(['posts:title','user:name,email']);
-        return $category;
+        
+        $posts = $category->posts()->with(['user:id,name'])->paginate(9);
+        $categories = Category::all();
+        return view('category', compact('category','categories','posts'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Category $category)
-    {   
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Category $category)
     {
         $this->authorize('update' , Category::class);
@@ -67,7 +54,7 @@ class CategoryController extends Controller
         );
         $validated['category_name'] = ucwords($validated['category_name']);
         $category->update($validated);
-        return redirect('/')->with('success','category updated!');
+        return redirect('/admin/dashboard')->with('success','category updated!');
     }
 
     /**
@@ -77,6 +64,6 @@ class CategoryController extends Controller
     {
         $this->authorize('delete', Category::class);
         $category->delete();
-        return redirect('/')->with('success','category delete!');
+        return redirect('/admin/dashboard')->with('success','category delete!');
     }
 }

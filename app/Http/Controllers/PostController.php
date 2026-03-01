@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -15,8 +16,10 @@ class PostController extends Controller
      */
     public function index()
     {
-       $posts = Post::with(['user:name','categories:category_name'])->get();
-        return $posts; 
+       $posts = Post::with(['user:id,name','category:id,category_name'])->latest()->paginate(9);
+       $categories = Category::all();
+       
+        return view('home',compact('posts','categories')); 
     }
 
     /**
@@ -49,8 +52,9 @@ class PostController extends Controller
      */
     public function show(Post $post)
        {
-        $post =  $post->load(['user:name,email','category:category_name']);
-        return $post;
+        $post =  $post->load(['user:id,name,email','category:id,category_name']);
+        $categories = Category::all();
+        return view('post',compact('post' , 'categories'));
     }
 
     /**
@@ -71,7 +75,7 @@ class PostController extends Controller
             [
                 'title' => 'required|string|max:255',
                 'post' => 'required|string',
-                'category' => 'required'
+                'category_id' => 'required'
             ]
         );
         $post->update($validated + ['status' => 'edited']);
@@ -83,7 +87,8 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        $this->authorize( 'destroy',$post);
+        $this->authorize('destroy',$post);
+        //if ($post->user->role == 'admin'|| auth()->user()->id == $post->user_id);
         $post->delete();
         return redirect('/')->with('success', 'post deleted');
     }
