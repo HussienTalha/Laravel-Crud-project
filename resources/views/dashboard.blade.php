@@ -101,7 +101,7 @@
                                                 <div class="avatar-sm bg-primary rounded-circle me-2 d-flex align-items-center justify-content-center">
                                                     <i class="fas  text-white"></i>
                                                 </div>
-                                                <a href="{{ uri("/categories/{$user->id}") }}">{{$user->name}}</a>
+                                                <a href="{{ uri("/users/{$user->id}") }}">{{$user->name}}</a>
                                             </div>
                                         </td>
                                         <td>

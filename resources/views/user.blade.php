@@ -5,7 +5,7 @@
             <div class="text-center my-5">
                 <h1 class="fw-bolder">{{$user->name}} </h1>
             </div>
-        </div>>
+        </div>
     </header>
         
     <!-- Page content-->
@@ -22,7 +22,7 @@
                 <div class="card mb-4">
                     <a href="#!"><img class="card-img-top" src="https://dummyimage.com/850x350/dee2e6/6c757d.jpg" alt="..." /></a>
                     <div class="card-body">
-                        <div class="small text-muted">{{$featured_post->created_at}}</div>
+                        <div class="small text-muted">{{$featured_post->created_at->format('d/m/y - H:i')}}</div>
                         <h2 class="card-title h4 ">{{ Str::limit($featured_post->title,50) }}</h2>
                        <p class="card-text">{{Str::limit($featured_post->post)}}</p>
                         <a class="btn btn-primary" href="{{ uri("/posts/{$featured_post->id}") }}">Read more →</a>
@@ -46,7 +46,8 @@
                                 <a href="#!"><img class="card-img-top" src="https://dummyimage.com/700x350/dee2e6/6c757d.jpg" alt="..." /></a>
                                 <div class="card-body d-flex flex-column" style="flex: 1;">
                                     <div class="small text-muted">
-                                        <p>{{ $post->created_at }} <br>Created By : {{ $post->user->name }}</p>
+                                        <p>{{ $post->created_at->format('d/m/y - H:i') }} <br>Created By : {{ $post->user->name }}</p>
+                                    
                                     </div>
                                     <h2 class="card-title h4 ">{{ Str::limit($post->title,50) }}</h2>
                                     <p class="card-text flex-grow-1">{{ Str::limit($post->post,50)}}</p>

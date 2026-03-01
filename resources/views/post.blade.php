@@ -10,8 +10,8 @@
                             <!-- Post title-->
                             <h1 class="fw-bolder mb-1">{{$post->title}}</h1>
                             <!-- Post meta content-->
-                            <div class="text-muted fst-italic mb-2"><p>{{ $post->created_at}}</p>
-                            <a href="{{ uri("/user/{$post->user->id}") }}"><p>{{$post->user->name}}</p> </a>
+                            <div class="text-muted fst-italic mb-2"><p>{{ $post->created_at->format('d/m/y - H:i')}}</p>
+                            <a href="{{ uri("/users/{$post->user->id}") }}"><p>{{$post->user->name}}</p> </a>
                             </div>
                             <!-- Post categories-->
                             <a class="badge bg-secondary text-decoration-none link-light" href="{{ uri("/categories/{$post->category_id}")}}">{{$post->category->category_name}}</a>

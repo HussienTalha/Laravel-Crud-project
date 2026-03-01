@@ -21,7 +21,7 @@
                     <div class="card mb-4">
                         <a href="#!"><img class="card-img-top" src="https://dummyimage.com/850x350/dee2e6/6c757d.jpg" alt="..." /></a>
                         <div class="card-body">
-                            <div class="small text-muted">{{$featured_post->created_at}}
+                            <div class="small text-muted">{{$featured_post->created_at->format('d/m/y - H:i')}}
                             <p>Post By: <a href="{{ uri("/users/{$featured_post->user_id}") }}">{{$featured_post->user->name}}</a></p>
  
                             </div>
@@ -54,7 +54,7 @@
                             <div class="card mb-4" style="height: 450px; display: flex; flex-direction: column;">
                                 <a href="#!"><img class="card-img-top" src="https://dummyimage.com/700x350/dee2e6/6c757d.jpg" alt="..." /></a>
                                 <div class="card-body d-flex flex-column" style="flex: 1;">
-                                    <div class="small text-muted"><p>{{ $post->created_at }} <br>
+                                    <div class="small text-muted"><p>{{ $post->created_at->format('d/m/y - H:i') }} <br>
                                      Post By: <a href="{{ uri("/users/{$post->user_id}") }}">{{$post->user->name}}</a></p>
                                    </div>
                                     <h2 class="card-title h4">{{ Str::limit($post->title,50) }}</h2>

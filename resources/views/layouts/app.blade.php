@@ -41,7 +41,7 @@
                             @endphp
                             @endif
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ uri("/user/{$id}")}}">Profile </a>
+                            <a class="nav-link" href="{{ uri("/users/{$id}")}}"> Profile </a>
                         </li>
                         @endauth
                     </ul>
