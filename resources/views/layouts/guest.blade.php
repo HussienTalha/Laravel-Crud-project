@@ -1,30 +1,39 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+    <!-- BS5 Starter Kit Assets -->
+    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+</head>
+<body class="bs5-kit bg-light">
+    <div class="min-vh-100 d-flex align-items-center">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6 col-lg-5">
+                    <div class="text-center mb-4">
+                        <h1 class="h3 text-primary">{{ config('app.name', 'Laravel') }}</h1>
+                    </div>
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+                    {{ $slot }}
 
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    </head>
-    <body class="font-sans text-gray-900 antialiased">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
-            <div>
-                <a href="/">
-                    <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
-                </a>
-            </div>
-
-            <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
-                {{ $slot }}
+                    <div class="text-center mt-4">
+                        <small class="text-muted">
+                            Powered by <a href="https://github.com/Get-Tony/bs5-starter-kit"
+                                          target="_blank"
+                                          class="text-primary fw-semibold text-decoration-none">
+                                          BS5 Starter Kit
+                                       </a>
+                        </small>
+                    </div>
+                </div>
             </div>
         </div>
-    </body>
+    </div>
+
+    <!-- Toast container -->
+    <div id="toast-container" class="toast-container position-fixed top-0 end-0 p-3"></div>
+</body>
 </html>
