@@ -3,17 +3,24 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\Category;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Validation\Rules;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
-
+use App\Models\User;
+use App\Models\Post;
 class ProfileController extends Controller
 {
-    /**
-     * Display the user's profile form.
-     */
+    public function show(User $user){
+
+        $posts = Post::where('user_id',$user->id)->paginate(9);
+        $categories=Category::all();
+        return view('user',compact('user','posts','categories'));
+    }
     public function edit(Request $request): View
     {
         return view('profile.edit', [
@@ -25,16 +32,38 @@ class ProfileController extends Controller
      * Update the user's profile information.
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
-    {
-        $request->user()->fill($request->validated());
+{
+    $user = auth()->user();
+    
+    // Set values - keep original if not provided
+    if ($request->filled('name')) {
+        $user->name = $request->name;
+    }
+    
+    if ($request->filled('email')) {
+        // Validate email uniqueness excluding current user
+        $request->validate([
+            'email' => ['string', 'lowercase', 'email', 'max:255', 'unique:users,email,' . $user->id],
+        ]);
+        $user->email = $request->email;
+    }
+    
+    if ($request->filled('password')) {
+        $request->validate([
+            'password' => ['confirmed', Rules\Password::defaults()]
+        ]);
+        $user->password = Hash::make($request->password);
+    }
+    
+    // Check if any changes were made
+    if ($user->isDirty()) {
+        $user->save();
+        return back()->with('success', 'Profile updated successfully');
+    }
+    
+    return back()->with('info', 'No changes were made');
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
-        }
 
-        $request->user()->save();
-
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
 
     /**
@@ -58,3 +87,4 @@ class ProfileController extends Controller
         return Redirect::to('/');
     }
 }
+
