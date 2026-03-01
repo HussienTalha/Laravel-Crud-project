@@ -23,7 +23,7 @@
                     <a href="#!"><img class="card-img-top" src="https://dummyimage.com/850x350/dee2e6/6c757d.jpg" alt="..." /></a>
                     <div class="card-body">
                         <div class="small text-muted">{{$featured_post->created_at}}</div>
-                        <h2 class="card-title h4 ">{{ Str::limit($post->title,50) }}</h2>
+                        <h2 class="card-title h4 ">{{ Str::limit($featured_post->title,50) }}</h2>
                        <p class="card-text">{{Str::limit($featured_post->post)}}</p>
                         <a class="btn btn-primary" href="{{ uri("/posts/{$featured_post->id}") }}">Read more →</a>
                     </div>
