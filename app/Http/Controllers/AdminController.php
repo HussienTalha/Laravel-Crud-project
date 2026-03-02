@@ -29,7 +29,7 @@ class AdminController extends Controller
     public function makeAdmin(Request $request , User $user){
         if (Auth::user()->role =='admin'){
             $user->update(['role'=>'admin']);
-        return redirect()->route('/admin/dashboard')->with('success', "user $user->name is now $user->role!");
+        return redirect('/admin/dashboard')->with('success', "user $user->name is now $user->role!");
         }
     }
     
@@ -38,7 +38,7 @@ class AdminController extends Controller
         if ($request->user()->role =='admin'){
             $user->update(['role'=> 'user']);
         }
-        return redirect()->route('/admin/dashboard')->with('success',"user $user->name is no longer admin!");
+        return redirect('/admin/dashboard')->with('success', "user $user->name is now $user->role!");
     }
 
     public function deleteUser(Request $request, User $user){
@@ -47,7 +47,7 @@ class AdminController extends Controller
         if (in_array($request->user()->role, $roles) && $user->role =='user'){
             $user->delete();
         }
-        return redirect()->route('/admin/dashboard')->with('success',"user $user->name is deleted!");
+        return redirect('/admin/dashboard')->with('success', "user $user->name is now $user->role!");
     }
     public function addUser(Request $request){
     $roles = ['admin', 'superAdmin'];    
@@ -56,14 +56,16 @@ class AdminController extends Controller
         $validated= $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' =>['required','confirmed',Rules\Password::defaults()]
+            'password' =>['required','confirmed',Rules\Password::defaults()],
+            'role'=>['string','in:admin,user']
         ]);
         $user =User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
-            'password' => Hash::make($validated['password'])
+            'password' => Hash::make($validated['password']),
+            'role' => $validated['role']
         ]);
-        return redirect()->route('/admin/dasboard');
+        return redirect('/admin/dashboard');
 
     }
     }
