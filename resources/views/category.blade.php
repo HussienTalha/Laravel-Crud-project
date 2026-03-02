@@ -4,7 +4,7 @@
 <header class="py-5 bg-light border-bottom mb-4" style="background-image: url('{{ asset('img/home-bg.jpg')}}'); background-size: cover; background-position:center">
             <div class="container">
                 <div class="text-center my-5">
-                    <h1 class="fw-bolder">{{$category->category_name}} Category</h1>
+                    <h1 class="fw-bolder">{{$category->category_name}} Posts</h1>
                 </div>
         </header>
         

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Post;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
@@ -62,6 +63,8 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
+        $uncategorized = Category::where('Category_name','=','Uncategorized')->get();
+        $affected_posts = Post::where('category_id' ,'=',$category->id)->update(['category_id'=>$uncategorized->id]);
         $this->authorize('delete', Category::class);
         $category->delete();
         return redirect('/admin/dashboard')->with('success','category delete!');

@@ -14,8 +14,14 @@
                             <a href="{{ uri("/users/{$post->user->id}") }}"><p>{{$post->user->name}}</p> </a>
                             </div>
                             <!-- Post categories-->
+                            @if($post->category_id)
                             <a class="badge bg-secondary text-decoration-none link-light" href="{{ uri("/categories/{$post->category_id}")}}">{{$post->category->category_name}}</a>
                             <div style="padding-top:5px">
+                            @else
+                            <a class="badge bg-secondary text-decoration-none link-light" href="">Uncategorized</a>
+                            <div style="padding-top:5px">
+                            
+                            @endif
                             @auth
                             @if (auth()->user()->id == $post->user_id)
 
