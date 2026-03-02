@@ -16,7 +16,6 @@ return new class extends Migration
             $table->text('title');
             $table->text('post');
             $table->text('status');
-          //  $table->string('image');
             $table->timestamps();
             $table->foreignId('user_id')
                   ->onDelete('cascade')
