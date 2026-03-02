@@ -27,8 +27,14 @@
                     $featured_post = $posts->first();
                     @endphp
                     <div class="card mb-4">
-                        <a href="#!"><img class="card-img-top" src="https://dummyimage.com/850x350/dee2e6/6c757d.jpg" alt="..." /></a>
-                        <div class="card-body">
+                        <!-- image -->
+                        @if($featured_post->image)
+                        <figure class="mb-4"><img class="img-fluid rounded" src="{{ Storage::url($featured_post->image) }}" style="max-width:100%; max-height: auto;"></figure>
+                        @else
+                        <figure class="mb-4"><img class="img-fluid rounded"src ="https://dummyimage.com/700x350/dee2e6/6c757d.jpg"></figure>
+                        @endif
+
+                       <div class="card-body">
                             <div class="small text-muted">{{$featured_post->created_at->format('d/m/y - H:i')}}
                         <p>Post By: <a href="{{ uri("/users/{$featured_post->user_id}") }}">{{$featured_post->user->name}}</a></p>
                             </div>
@@ -45,17 +51,32 @@
                         <div class="col-lg-6">
                             <!-- Blog post-->
                             <div class="card mb-4" style="height: 450px; display: flex; flex-direction: column;">
-                                <a href="#!"><img class="card-img-top" src="https://dummyimage.com/700x350/dee2e6/6c757d.jpg" alt="..." /></a>
-                                <div class="card-body d-flex flex-column" style="flex: 1;">
-                                    <div class="small text-muted"><p>{{ $post->created_at->$request->format('d/m/y - H:i') }} <br>
+
+                                         <!-- image -->
+                               @if($post->image)
+                                <figure class="mb-4" style="height: 180px; overflow: hidden;">
+                                    <img class="img-fluid rounded" 
+                                         src="{{ Storage::url($post->image) }}" 
+                                         style="width: 100%; height: 100%; object-fit: cover;">
+                                </figure>
+                                @else
+                                <figure class="mb-4" style="height: 180px; overflow: hidden;">
+                                    <img class="img-fluid rounded"
+                                         src="https://dummyimage.com/700x350/dee2e6/6c757d.jpg"
+                                         style="width: 100%; height: 100%; object-fit: cover;">
+                                </figure>
+                                @endif
+    
+                                                                     <div class="card-body d-flex flex-column" style="flex: 1;">
+                                    <div class="small text-muted"><p>{{ $post->created_at->format('d/m/y - H:i') }} <br>
                                     
                                      Post By: <a href="{{ uri("/users/{$post->user_id}") }}">{{$post->user->name}}</a></p>
                                     </div>
-                                    <h2 class="card-title h4 ">{{ Str::limit($post->title,50) }}</h2>
+                                    <h2 class="card-title h4 ">{{ Str::limit($post->title,40) }}</h2>
                                     <p class="card-text flex-grow-1 " >
                             
-                            {{ Str::limit($post->post,50)}}</p>
-                                    <a class="btn btn-primary align-self-start mt-3" href="{{uri("posts/{$post->id}")}}">Read more →</a>
+                            {{ Str::limit($post->post,40)}}</p>
+                                    <a class="btn btn-primary align-self-start mt-3" href="{{uri("/posts/{$post->id}")}}">Read more →</a>
                                 </div>
                             </div>
                         </div>
@@ -111,7 +132,7 @@
                 </div>
             </div>
         </div>
-
+    
     <!-- Create Post Modal -->
 <div>
 <div class="modal fade" id="newPostModal" tabindex="-1" aria-labelledby="newPostModalLabel" aria-hidden="true">
@@ -122,7 +143,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="/posts" method="POST">
+                    <form action="/posts" method="POST" enctype="multipart/form-data" >
                         @csrf
                         <div class="mb-3">
                             <label for="Title" class="form-label" >Title</label>
@@ -139,6 +160,10 @@
                                 <option value="{{ $category->id}}"> {{ $category->category_name }}</option>
                                 @endforeach
                             </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="image" class="form-label">Upload Image</label>
+                            <input class="form-control" type="file" name="image" id="image" accept="image/*">
                         </div>
                 </div>
                 <div class="modal-footer">

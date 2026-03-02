@@ -1,5 +1,4 @@
 <x-app-layout>
-
 <div class="container mt-5">
             <div class="row">
                 <div class="col-lg-8">
@@ -37,7 +36,12 @@
                     </div>
                         </header>
                         <!-- Preview image figure-->
-                        <figure class="mb-4"><img class="img-fluid rounded" src="https://dummyimage.com/900x400/ced4da/6c757d.jpg" alt="..." /></figure>
+                        @if($post->image)
+                        <figure class="mb-4"><img class="img-fluid rounded" src="{{ Storage::url($post->image) }}"> </figure>
+                        @else
+                        <figure class="mb-4"><img class="img-fluid rounded"src ="https://dummyimage.com/700x350/dee2e6/6c757d.jpg"></figure>
+                            
+                        @endif
                         <!-- Post content-->
                         <section class="mb-5">
                             <p class="fs-5 mb-4">{{$post->post}}</p>

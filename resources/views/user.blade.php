@@ -20,8 +20,23 @@
                 
                 @if($featured_post)
                 <div class="card mb-4">
-                    <a href="#!"><img class="card-img-top" src="https://dummyimage.com/850x350/dee2e6/6c757d.jpg" alt="..." /></a>
-                    <div class="card-body">
+
+                        <!-- image -->
+                          @if($post->image)
+                            <figure class="mb-4" style="height: 180px; overflow: hidden;">
+                                <img class="img-fluid rounded" 
+                                     src="{{ Storage::url($post->image) }}" 
+                                     style="width: 100%; height: 100%; object-fit: cover;">
+                            </figure>
+                            @else
+                            <figure class="mb-4" style="height: 180px; overflow: hidden;">
+                                <img class="img-fluid rounded"
+                                     src="https://dummyimage.com/700x350/dee2e6/6c757d.jpg"
+                                     style="width: 100%; height: 100%; object-fit: cover;">
+                            </figure>
+                            @endif
+    
+                   <div class="card-body">
                         <div class="small text-muted">{{$featured_post->created_at->format('d/m/y - H:i')}}</div>
                         <h2 class="card-title h4 ">{{ Str::limit($featured_post->title,50) }}</h2>
                        <p class="card-text">{{Str::limit($featured_post->post)}}</p>
@@ -43,14 +58,20 @@
                         <div class="col-lg-6">
                             <!-- Blog post-->
                             <div class="card mb-4" style="height: 450px; display: flex; flex-direction: column;">
-                                <a href="#!"><img class="card-img-top" src="https://dummyimage.com/700x350/dee2e6/6c757d.jpg" alt="..." /></a>
-                                <div class="card-body d-flex flex-column" style="flex: 1;">
+
+                                         <!-- image -->
+                                        @if($post->image)
+                                        <figure class="mb-4"><img class="img-fluid rounded" src="{{ Storage::url($post->image) }}" style="max-width: 100%; max-height:auto ;"> </figure>
+                                        @else
+                                        <figure class="mb-4"><img class="img-fluid rounded"src ="https://dummyimage.com/700x350/dee2e6/6c757d.jpg"></figure>
+                                        @endif   
+                               <div class="card-body d-flex flex-column" style="flex: 1;">
                                     <div class="small text-muted">
                                         <p>{{ $post->created_at->format('d/m/y - H:i') }} <br>Created By : {{ $post->user->name }}</p>
                                     
                                     </div>
-                                    <h2 class="card-title h4 ">{{ Str::limit($post->title,50) }}</h2>
-                                    <p class="card-text flex-grow-1">{{ Str::limit($post->post,50)}}</p>
+                                    <h2 class="card-title h4 ">{{ Str::limit($post->title,40) }}</h2>
+                                    <p class="card-text flex-grow-1">{{ Str::limit($post->post,40)}}</p>
                                     <a class="btn btn-primary align-self-start mt-3" href="{{ uri("posts/{$post->id}") }}">Read more →</a>
                                 </div>
                             </div>
