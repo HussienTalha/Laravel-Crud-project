@@ -17,7 +17,7 @@ class ProfileController extends Controller
 {
     public function show(User $user){
 
-        $posts = Post::where('user_id',$user->id)->paginate(9);
+        $posts = Post::where('user_id',$user->id)->latest()->paginate(9);
         $categories=Category::all();
         return view('user',compact('user','posts','categories'));
     }

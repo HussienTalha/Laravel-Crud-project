@@ -6,6 +6,7 @@ use App\Models\Post;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use function Pest\Laravel\options;
 
 
 
@@ -34,12 +35,20 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
+
         $validated = $request->validate(
             [
                 'title' => 'required|string|',
                 'post' => 'required|string',
+                'image' => 'image',
                 'category_id' => 'required',
             ]);
+
+            if($request->hasFile('image')){
+                $validated['image'] = $request->file('image')->store(options:'public');
+                
+            }
+            
 
         auth()->user()->posts()->create($validated + ['status' => 'created']);
 

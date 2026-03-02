@@ -40,7 +40,7 @@ class CategoryController extends Controller
     public function show(Category $category)
     {
         
-        $posts = $category->posts()->with(['user:id,name'])->paginate(9);
+        $posts = $category->posts()->with(['user:id,name'])->latest()->paginate(9);
         $categories = Category::all();
         return view('category', compact('category','categories','posts'));
     }
