@@ -12,14 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('posts', function (Blueprint $table) {
-                $table->dropForeign(['category_id']);
-                $table->dropColumn('category_id');
+            $table->dropForeign(['category_id']);
+            $table->dropColumn('category_id');
 
-                $table->foreignId('category_id')
-                      ->nullable()
-                      ->constrained('categories')
-                      ->nullOnDelete()
-                      ->onUpdate('cascade');
+            $table->foreignId('category_id')
+                ->nullable()
+                ->constrained('categories')
+                ->nullOnDelete()
+                ->onUpdate('cascade');
         });
     }
 

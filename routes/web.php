@@ -1,22 +1,23 @@
 <?php
+
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AdminController;
 
-Route::get('/',[PostController::class,'index']);
-Route::get('/user/{user}',[ProfileController::class,'show']);
+Route::get('/', [PostController::class, 'index']);
+Route::get('/users/{user}', [ProfileController::class, 'show']);
 
-Route::controller(AdminController::class)->middleware(['auth', 'verified','checkRole'])->group(function(){
+Route::controller(AdminController::class)->middleware(['auth', 'verified', 'checkRole'])->group(function () {
 
-    Route::get('/admin/dashboard','index')->name('dashboard');
-    Route::put('/admin/{user}/makeAdmin','makeAdmin');
-    Route::post('/admin/addUser','addUser');
-    Route::delete('/admin/{user}/deleteAdmin','deleteAdmin');
-    Route::delete('/admin/{user}/deleteUser','deleteUser');
+    Route::get('/admin/dashboard', 'index')->name('dashboard');
+    Route::put('/admin/{user}/makeAdmin', 'makeAdmin');
+    Route::post('/admin/addUser', 'addUser');
+    Route::delete('/admin/{user}/deleteAdmin', 'deleteAdmin');
+    Route::delete('/admin/{user}/deleteUser', 'deleteUser');
 });
-//Route::get('/profile/{user}','show');
+// Route::get('/profile/{user}','show');
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -24,24 +25,24 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
-Route::controller(PostController::class)->group(function(){
-    Route::get('/posts','index');
-    Route::get('/posts/{post}','show'); 
-    Route::middleware('auth')->group(function(){
-        Route::put('/posts/{post}/edit','update');
-        Route::post('/posts','store');
+Route::controller(PostController::class)->group(function () {
+    Route::get('/posts', 'index');
+    Route::get('/posts/{post}', 'show');
+    Route::middleware('auth')->group(function () {
+        Route::put('/posts/{post}/edit', 'update');
+        Route::post('/posts', 'store');
         Route::delete('/posts/{post}/delete', 'destroy');
     });
 });
-Route::controller(CategoryController::Class)->group(function(){
-    Route::get('/categories','index');
-    Route::get('/categories/{category}','show');
-    Route::middleware('auth')->group(function (){
-        Route::post('/categories','store');
-        Route::put('/categories/{category}/edit','update');
-        Route::delete('/categories/{category}/delete','destroy');
-        
-    }); 
+Route::controller(CategoryController::class)->group(function () {
+    Route::get('/categories', 'index');
+    Route::get('/categories/{category}', 'show');
+    Route::middleware('auth')->group(function () {
+        Route::post('/categories', 'store');
+        Route::put('/categories/{category}/edit', 'update');
+        Route::delete('/categories/{category}/delete', 'destroy');
+
+    });
 });
 // Authentication Routes (BS5 Starter Kit)
 Route::middleware('guest')->group(function () {
@@ -79,6 +80,7 @@ Route::middleware('guest')->group(function () {
 
         if (\Illuminate\Support\Facades\Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
+
             return redirect()->intended('/');
         }
 
@@ -106,6 +108,7 @@ Route::middleware('auth')->group(function () {
         \Illuminate\Support\Facades\Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+
         return redirect('/');
     })->name('logout');
 });

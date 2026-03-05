@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\Models\Post;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class PostPolicy
 {
@@ -26,7 +25,6 @@ class PostPolicy
      */
     public function destroy(User $user, Post $post): bool
     {
-        return ($post->user()->is($user) ) ||$user->role ==='admin';
+        return $post->user()->is($user) || $user->role === 'admin';
     }
-
 }

@@ -2,9 +2,9 @@
 
 namespace Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\Post;
-use Illuminate\Database\Eloquent\Factories\Sequence;
+use Illuminate\Database\Eloquent\Factories\Factory;
+
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Post>
  */
@@ -15,14 +15,14 @@ class PostFactory extends Factory
      *
      * @return array<string, mixed>
      */
-    protected $model = Post::class ;
+    protected $model = Post::class;
 
     public function definition(): array
     {
         return [
             'title' => fake()->sentence(),
             'post' => fake()->text(500),
-            'status'=> fake()->randomElement(['created', 'edited']),
+            'status' => fake()->randomElement(['created', 'edited']),
         ];
     }
 }

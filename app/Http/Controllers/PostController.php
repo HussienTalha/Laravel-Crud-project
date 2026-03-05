@@ -2,13 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Post;
 use App\Models\Category;
+use App\Models\Post;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use function Pest\Laravel\options;
-
-
 
 class PostController extends Controller
 {
@@ -17,18 +13,16 @@ class PostController extends Controller
      */
     public function index()
     {
-       $posts = Post::with(['user:id,name','category:id,category_name'])->latest()->paginate(9);
-       $categories = Category::all();
-       
-        return view('home',compact('posts','categories')); 
+        $posts = Post::with(['user:id,name', 'category:id,category_name'])->latest()->paginate(9);
+        $categories = Category::all();
+
+        return view('home', compact('posts', 'categories'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
-    }
+    public function create() {}
 
     /**
      * Store a newly created resource in storage.
@@ -44,51 +38,48 @@ class PostController extends Controller
                 'category_id' => 'required',
             ]);
 
-            if($request->hasFile('image')){
-                $validated['image'] = $request->file('image')->store(options:'public');
-                
-            }
-            
+        if ($request->hasFile('image')) {
+            $validated['image'] = $request->file('image')->store(options: 'public');
+
+        }
 
         auth()->user()->posts()->create($validated + ['status' => 'created']);
 
-                
-        return redirect('/')->with('success','post created');
+        return redirect('/')->with('success', 'post created');
     }
 
     /**
      * Display the specified resource.
      */
     public function show(Post $post)
-       {
-        $post =  $post->load(['user:id,name,email','category:id,category_name']);
+    {
+        $post = $post->load(['user:id,name,email', 'category:id,category_name']);
         $categories = Category::all();
-        return view('post',compact('post' , 'categories'));
+
+        return view('post', compact('post', 'categories'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Post $posts)
-    {
-
-    }
+    public function edit(Post $posts) {}
 
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, Post $post)
     {
-        $this->authorize('update',$post);
+        $this->authorize('update', $post);
         $validated = $request->validate(
             [
                 'title' => 'required|string|max:255',
                 'post' => 'required|string',
-                'category_id' => 'required'
+                'category_id' => 'required',
             ]
         );
         $post->update($validated + ['status' => 'edited']);
-        return redirect('/')->with('success','post updated');
+
+        return redirect('/')->with('success', 'post updated');
     }
 
     /**
@@ -96,9 +87,10 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        $this->authorize('destroy',$post);
-        //if ($post->user->role == 'admin'|| auth()->user()->id == $post->user_id);
+        $this->authorize('destroy', $post);
+        // if ($post->user->role == 'admin'|| auth()->user()->id == $post->user_id);
         $post->delete();
+
         return redirect('/')->with('success', 'post deleted');
     }
 }

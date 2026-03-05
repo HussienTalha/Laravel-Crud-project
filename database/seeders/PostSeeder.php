@@ -2,11 +2,11 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
-use App\Models\Post;
 use App\Models\Category;
+use App\Models\Post;
 use App\Models\User;
+use Illuminate\Database\Seeder;
+
 class PostSeeder extends Seeder
 {
     /**
@@ -19,10 +19,10 @@ class PostSeeder extends Seeder
 
         Post::factory()
             ->count(10)
-            ->create( [
-                    'user_id' => $users->random()->id,
-                    'category_id' => $categories->random()->id
-                ]
+            ->create([
+                'user_id' => $users->random()->id,
+                'category_id' => $categories->random()->id,
+            ]
             );
     }
 }

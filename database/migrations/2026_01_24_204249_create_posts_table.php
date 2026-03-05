@@ -18,14 +18,14 @@ return new class extends Migration
             $table->text('status');
             $table->timestamps();
             $table->foreignId('user_id')
-                  ->onDelete('cascade')
-                  ->onUpdate('cascade')
-                  ->constrained('users');
+                ->onDelete('cascade')
+                ->onUpdate('cascade')
+                ->constrained('users');
             $table->foreignId('category_id')
-                  ->nullOnDelete()
-                  ->cascadeOnUpdate()
-                  ->nullable()
-                  ->constrained('categories');
+                ->nullOnDelete()
+                ->cascadeOnUpdate()
+                ->nullable()
+                ->constrained('categories');
         });
     }
 

@@ -15,8 +15,9 @@ class CategoryController extends Controller
      */
     public function index()
     {
-       $categories = Category::all();
-       return response()->json($categories ,200);
+        $categories = Category::all();
+
+        return response()->json($categories, 200);
     }
 
     /**
@@ -24,23 +25,23 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        if(Auth::user()->role =='admin'){
-        $validated = $request->validate(
-            [
-                'category_name' => "required|string|unique",
-            ]
-        );
-        $validated['category_name'] = ucwords($validated['category_name']);
-        Category::create($validated);
-        return response()->json([
-            'message' =>'category created!'
-        ],201);
-        }
-        else{
-            return response()->json([
-                'message' => 'Unauthorized!'
+        if (Auth::user()->role == 'admin') {
+            $validated = $request->validate(
+                [
+                    'category_name' => 'required|string|unique',
+                ]
+            );
+            $validated['category_name'] = ucwords($validated['category_name']);
+            Category::create($validated);
 
-            ],403);
+            return response()->json([
+                'message' => 'category created!',
+            ], 201);
+        } else {
+            return response()->json([
+                'message' => 'Unauthorized!',
+
+            ], 403);
         }
     }
 
@@ -49,25 +50,25 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        $category = $category->load(['posts:id,title,user_id,category_id','posts.user:id,name']);
-       // $category_posts = $category->posts()->with(['user:id,name'])->get();
-        $formated_category =[
-             'id' => $category->id,   
-             'category name' => $category->category_name,
-             
-             'posts' =>$category->posts->map(function($post){
+        $category = $category->load(['posts:id,title,user_id,category_id', 'posts.user:id,name']);
+        // $category_posts = $category->posts()->with(['user:id,name'])->get();
+        $formated_category = [
+            'id' => $category->id,
+            'category name' => $category->category_name,
+
+            'posts' => $category->posts->map(function ($post) {
                 return [
-                'title' => $post->title,
-                'id' => $post->id,
-                'author' =>[
-                    'id' => $post->user_id,
-                    'name' =>$post->user->name
-                ]
-             ];
-             })
-             ];
-        
-        return response()->json($formated_category,200);
+                    'title' => $post->title,
+                    'id' => $post->id,
+                    'author' => [
+                        'id' => $post->user_id,
+                        'name' => $post->user->name,
+                    ],
+                ];
+            }),
+        ];
+
+        return response()->json($formated_category, 200);
     }
 
     /**
@@ -75,20 +76,22 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        if ($request->user()->role == 'admin'){
-        $validated = $request->validate(
-            [
-                'category_name' => 'required|unique'   
-            ]
-        );
-        $post->update($validated);
-        return response()->json([
-               'message' => 'category updated!',
-        ],204);
+        if ($request->user()->role == 'admin') {
+            $validated = $request->validate(
+                [
+                    'category_name' => 'required|unique',
+                ]
+            );
+            $post->update($validated);
+
+            return response()->json([
+                'message' => 'category updated!',
+            ], 204);
         }
+
         return response()->json([
-            'message' => 'unauthorized!'
-        ],403);
+            'message' => 'unauthorized!',
+        ], 403);
     }
 
     /**
@@ -96,14 +99,16 @@ class CategoryController extends Controller
      */
     public function delete(Post $post)
     {
-        if (Auth::user()->role =='admin'){
-        $post->delete();
-        return response()->json([
-               'message' => 'category deleted !',
-        ],201);
+        if (Auth::user()->role == 'admin') {
+            $post->delete();
+
+            return response()->json([
+                'message' => 'category deleted !',
+            ], 201);
         }
+
         return response()->json([
-            'message' => 'unauthorized!'
-        ],403);
+            'message' => 'unauthorized!',
+        ], 403);
     }
 }
