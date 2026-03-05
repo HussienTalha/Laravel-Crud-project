@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -39,11 +40,11 @@ class UserController extends Controller
                     'role' => $user->role,
                     'abilities' => $user->currentAccessToken()->abilities,
                 ],
-                'posts' => $posts->map(function ($post) {
-                    [
+                'posts' => $posts->map(function (Post $post) {
+                   return [
                         'id' => $post->id,
                         'title' => $post->title,
-                        'content' => $post->content,
+                        'content' => $post->post,
                         'category' => [
                             'id' => $post->category->id,
                             'category name' => $post->category->category_name,

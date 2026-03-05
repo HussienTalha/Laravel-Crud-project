@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use Illuminate\Database\Eloquent\Collection;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Post;
@@ -50,13 +51,17 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
+            /**
+             *  @var \App\Models\Category $category
+             */
+
         $category = $category->load(['posts:id,title,user_id,category_id', 'posts.user:id,name']);
         // $category_posts = $category->posts()->with(['user:id,name'])->get();
         $formated_category = [
             'id' => $category->id,
             'category name' => $category->category_name,
 
-            'posts' => $category->posts->map(function ($post) {
+            'posts' => $category->posts->map(function (Post $post) {
                 return [
                     'title' => $post->title,
                     'id' => $post->id,

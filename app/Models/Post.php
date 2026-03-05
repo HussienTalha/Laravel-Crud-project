@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property-read \App\Models\User|null $user
+ * @property-read \App\Models\Category|null $category
+ */
 class Post extends Model
 {
     use HasFactory;
