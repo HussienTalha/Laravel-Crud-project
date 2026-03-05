@@ -17,7 +17,7 @@ class CategoryPolicy
     public function update(User $user): bool
     {
 
-        return $user->role === 'admin' || $user->role === 'superAdmin';
+        return $user->role === 'admin' ;
     }
 
     /**
@@ -25,6 +25,6 @@ class CategoryPolicy
      */
     public function delete(User $user): bool
     {
-        return $user->role === 'admin' || $user->role === 'superAdmin';
+        return $user->role === 'admin' ;
     }
 }
