@@ -17,8 +17,10 @@
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^3.6",
+        "enlightn/security-checker": "^2.0",
         "fakerphp/faker": "^1.23",
         "friendsofphp/php-cs-fixer": "^3.94",
+        "larastan/larastan": "^3.9",
         "laravel/breeze": "^2.3",
         "laravel/pail": "^1.2.2",
         "laravel/pint": "^1.18",

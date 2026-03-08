@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Database\Factories\CategoryFactory;
+use App\Models\Post;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -12,12 +14,21 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class Category extends Model
 {
+        /** @use HasFactory<CategoryFactory> */
     use HasFactory;
 
+    /**
+     *
+     * @var list<string>
+     */
     protected $fillable = [
         'category_name',
     ];
 
+    /**
+     * 
+     * @return HasMany<Post, $this>
+     */
     public function posts(): HasMany
     {
         return $this->hasMany(Post::class);

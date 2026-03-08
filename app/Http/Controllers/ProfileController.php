@@ -16,7 +16,7 @@ use Illuminate\View\View;
 
 class ProfileController extends Controller
 {
-    public function show(User $user)
+    public function show(User $user):View
     {
 
         $posts = Post::where('user_id', $user->id)->latest()->paginate(9);
@@ -25,11 +25,11 @@ class ProfileController extends Controller
         return view('user', compact('user', 'posts', 'categories'));
     }
 
-    public function edit(Request $request): View
+    public function edit(Request $request) :View
     {
-        return view('profile.edit', [
-            'user' => $request->user(),
-        ]);
+        $user =  $request->user();
+        return view('profile', compact('user'));
+        
     }
 
     /**
@@ -37,6 +37,9 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
+        /**
+         * @var User $user
+         */
         $user = auth()->user();
 
         // Set values - keep original if not provided
@@ -75,11 +78,15 @@ class ProfileController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
+        /**
+         * @var User $user
+         */
+        $user = $request->user();
+
         $request->validateWithBag('userDeletion', [
             'password' => ['required', 'current_password'],
         ]);
 
-        $user = $request->user();
 
         Auth::logout();
 

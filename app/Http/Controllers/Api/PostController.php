@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
 use App\Models\Post;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
@@ -13,7 +15,7 @@ class PostController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index():JsonResponse
     {
         $posts = Post::with(['user:id,name', 'category:id,category_name'])->get();
         $formantted_posts = $posts->map(function ($post) {
@@ -21,14 +23,14 @@ class PostController extends Controller
                 'title' => $post->title,
                 'content' => $post->post,
                 'user_id' => $post->user_id,
-                'category' => [
+                'category' => $post->category?[
                     'name' => $post->category->category_name,
                     'id' => $post->category_id,
-                ],
-                'author' => [
+                ]:null,
+                'author' => $post->user ? [
                     'name' => $post->user->name,
                     'id' => $post->user_id,
-                ],
+                ] :null,
 
             ];
         });
@@ -39,8 +41,12 @@ class PostController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request):JsonResponse
     {
+        /**
+         * @var User $user
+         */
+        $user = Auth::user();
         try {
             $validated = $request->validate(
                 [
@@ -64,7 +70,7 @@ class PostController extends Controller
                 ], 422);
         }
         $post = Post::create($validated + [
-            'user_id' => $request->user()->id,
+            'user_id' => $user->id,
             'status' => 'created',
         ]);
 
@@ -79,7 +85,7 @@ class PostController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Post $post)
+    public function show(Post $post):JsonResponse
     {
         $post = $post->load(['user:id,name', 'category:id,category_name']);
 
@@ -87,14 +93,14 @@ class PostController extends Controller
             [
                 'title' => $post->title,
                 'post' => $post->post,
-                'author' => [
+                'author' => $post->user? [
                     'id' => $post->user_id,
                     'name' => $post->user->name,
-                ],
-                'category' => [
+                ]: null,
+                'category' => $post->category?[
                     'category_id' => $post->category_id,
                     'category_name' => $post->category->category_name,
-                ],
+                ]:null,
             ], 200);
 
     }
@@ -102,9 +108,13 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Post $post)
+    public function update(Request $request, Post $post):JsonResponse
     {
-        if (! $request->user()->id == $post->user_id) {
+        /**
+         * @var User $user
+         */
+        $user = $request->user();
+        if (! $user->id == $post->user_id) {
             return response()->json([
 
                 'message' => 'unauthorized!',
@@ -131,9 +141,13 @@ class PostController extends Controller
     }
 
     //
-    public function delete(Post $post)
+    public function delete(Post $post):JsonResponse
     {
-        if (! Auth::user()->id == $post->user_id || Auth::user()->role == 'admin') {
+        /**
+         * @var User $user
+         */
+        $user = Auth::user();
+        if (! $user->id == $post->user_id || $user->role == 'admin') {
             return response()->json([
 
                 'message' => 'unauthorized!',

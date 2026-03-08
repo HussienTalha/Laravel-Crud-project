@@ -1,0 +1,21 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+parameters:
+    paths:
+        - app
+        - database
+        - routes
+        - resources
+
+    level: 8
+    tmpDir: tmp
+    excludePaths:
+        - database/migrations
+    universalObjectCratesClasses:
+        - Illuminate\Http\Request
+        - Illuminate\Contracts\Auth\Authenticatable
+
+
+    stubFiles:                   
+        - stubs/auth.stub          
+    

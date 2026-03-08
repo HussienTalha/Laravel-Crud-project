@@ -4,14 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Post;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
+use App\Models\User;
 
 class PostController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index():View
     {
         $posts = Post::with(['user:id,name', 'category:id,category_name'])->latest()->paginate(9);
         $categories = Category::all();
@@ -19,16 +22,16 @@ class PostController extends Controller
         return view('home', compact('posts', 'categories'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create() {}
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request):RedirectResponse
     {
+        /**
+         * @var User $user
+         */
+        $user = $request->user();
 
         $validated = $request->validate(
             [
@@ -42,8 +45,9 @@ class PostController extends Controller
             $validated['image'] = $request->file('image')->store(options: 'public');
 
         }
+        
 
-        auth()->user()->posts()->create($validated + ['status' => 'created']);
+        $user->create($validated + ['status' => 'created']);
 
         return redirect('/')->with('success', 'post created');
     }
@@ -51,7 +55,7 @@ class PostController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Post $post)
+    public function show(Post $post):View
     {
         $post = $post->load(['user:id,name,email', 'category:id,category_name']);
         $categories = Category::all();
@@ -59,15 +63,11 @@ class PostController extends Controller
         return view('post', compact('post', 'categories'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Post $posts) {}
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Post $post)
+    public function update(Request $request, Post $post):RedirectResponse
     {
         $this->authorize('update', $post);
         $validated = $request->validate(
@@ -85,7 +85,7 @@ class PostController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Post $post)
+    public function destroy(Post $post):RedirectResponse
     {
         $this->authorize('destroy', $post);
         // if ($post->user->role == 'admin'|| auth()->user()->id == $post->user_id);

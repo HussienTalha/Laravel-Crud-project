@@ -4,15 +4,25 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Post;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\View\View;
 
 class CategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+     /**
+         * @return Collection<int,Category> 
+         */
+    public function index(): Collection
     {
+        /**
+         * @return Collection<Category> 
+         */
         $categories = Category::all();
 
         return $categories;
@@ -21,7 +31,8 @@ class CategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request):RedirectResponse 
+
     {
         $this->authorize('create', Category::class);
         $validated = $request->validate(
@@ -38,16 +49,23 @@ class CategoryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Category $category)
+    public function show(Category $category): View
     {
 
-        $posts = $category->posts()->with(['user:id,name'])->latest()->paginate(9);
+        /**
+         * @var LengthAwarePaginator<int,Post> $posts
+         */
+         $posts = $category->posts()->with(['user:id,name'])->latest()->paginate(9);
+            /**
+             * @var Collection<int,Category> $categories
+             */
+        
         $categories = Category::all();
 
         return view('category', compact('category', 'categories', 'posts'));
     }
 
-    public function update(Request $request, Category $category)
+    public function update(Request $request, Category $category):RedirectResponse
     {
         $this->authorize('update', Category::class);
         $validated = $request->validate(
@@ -64,9 +82,15 @@ class CategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Category $category)
+    public function destroy(Category $category):RedirectResponse
     {
-        $uncategorized = Category::where('Category_name', '=', 'Uncategorized')->get();
+        /**
+         * @var Category $uncategorized
+         */
+        $uncategorized = Category::where('Category_name', '=', 'Uncategorized')->first();
+        /**
+         * @var Post $affected_posts 
+         */
         $affected_posts = Post::where('category_id', '=', $category->id)->update(['category_id' => $uncategorized->id]);
         $this->authorize('delete', Category::class);
         $category->delete();

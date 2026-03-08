@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
 use App\Models\User;
 use App\Models\Post;
 use Illuminate\Http\Request;
@@ -11,9 +12,13 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index():JsonResponse
     {
-        if (Auth::user()->role == 'admin') {
+        /**
+         * @var User $user
+         */
+        $user = Auth::user();
+        if ($user->role == 'admin') {
             $users = User::all();
 
             return response()->json([
@@ -26,9 +31,12 @@ class UserController extends Controller
         }
     }
 
-    public function profile(Request $request)
+    public function profile(Request $request):JsonResponse
     {
         // $user = Auth::user->load(['posts.category:category_name']);
+        /**
+         * @var User $user
+         */
         $user = $request->user();
         $posts = $user->posts()->with(['category:id,category_name'])->get();
 
@@ -40,37 +48,42 @@ class UserController extends Controller
                     'role' => $user->role,
                     'abilities' => $user->currentAccessToken()->abilities,
                 ],
-                'posts' => $posts->map(function (Post $post) {
+                'posts' => $posts->map(function (Post $post , int $key) {
                    return [
                         'id' => $post->id,
                         'title' => $post->title,
                         'content' => $post->post,
-                        'category' => [
+                        'category' => $post->category ?[
                             'id' => $post->category->id,
-                            'category name' => $post->category->category_name,
-                        ],
+                            'category name' => $post->category->category_name
+                        ]:null,
                     ];
                 }),
             ]);
     }
 
-    public function updateProfile(Request $request)
+    public function updateProfile(Request $request):JsonResponse
     {
 
+        /**
+         * @var User $user
+         * 
+         */
+        $user = Auth::user();
         $validated = $request->validate([
             'email' => 'email|unique:users|max:255|string',
             'name' => 'string|max:255',
             'password' => 'string|min:8|confirmed',
         ]);
 
-        if (! Hash::check($validated['old_password'], Auth::user()->password)) {
+        if (! Hash::check($validated['old_password'], $user->password)) {
 
             return response()->json([
                 'message' => 'wrong password',
             ], 404);
         }
 
-        User::where('id', '=', $request->user()->id)->update($validated);
+        User::where('id', '=', $user->id)->update($validated);
 
         return response()->json([
             'message' => 'profile updated!',
@@ -78,18 +91,13 @@ class UserController extends Controller
 
     }
 
-    public function updatePassword(Request $request)
-    {
-        // review password reset from docs
-        $validated = $request->validate([
-            'password' => 'string|required|mix:6|confirmed',
 
-        ]);
-    }
-
-    public function deleteProfile(User $user)
+    public function deleteProfile(User $user):JsonResponse
     {
-        if (Auth::user()->id == $user->id || Auth::user()->role == 'admin') {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        if ($user->id == $user->id || $user->role == 'admin') {
             $user->delete();
 
             return response()->json([

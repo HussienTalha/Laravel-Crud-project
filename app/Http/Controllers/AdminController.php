@@ -4,17 +4,22 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
+use Illuminate\View\View;
 
 class AdminController extends Controller
 {
-    public function index()
+    public function index():RedirectResponse|View
     {
+        /** @var \App\Models\User $user */
+        $user = auth()->user();
+
         $roles = ['admin', 'superAdmin'];
-        if (in_array(auth()->user()->role, $roles)) {
+        if (in_array($user->role, $roles)) {
             $users = User::all();
             $users_count = $users->count();
             $categories = Category::all();
@@ -22,41 +27,56 @@ class AdminController extends Controller
 
             return view('dashboard', compact('categories', 'categories_count', 'users', 'users_count'));
         }
+        abort(  403,'not authorized');
     }
 
-    public function makeAdmin(Request $request, User $user)
+    public function makeAdmin(Request $request, User $user):RedirectResponse
     {
-        if (Auth::user()->role == 'admin') {
+        /** @var \App\Models\User $user */
+        $user = auth()->user();
+
+        if ($user->role == 'admin') {
             $user->update(['role' => 'admin']);
 
             return redirect('/admin/dashboard')->with('success', "user $user->name is now $user->role!");
         }
+        abort(  403,'not authorized');
     }
 
-    public function deleteAdmin(Request $request, User $user)
+    public function deleteAdmin(Request $request, User $user):mixed
     {
-        if ($request->user()->role == 'admin') {
+        /** @var \App\Models\User $AuthUser */
+        $AuthUser = auth()->user();
+        
+        if ($AuthUser->role == 'admin') {
             $user->update(['role' => 'user']);
+        return redirect('/admin/dashboard')->with('success', "user $user->name is now $user->role!");
         }
 
-        return redirect('/admin/dashboard')->with('success', "user $user->name is now $user->role!");
+        abort(  403,'not authorized');
     }
 
-    public function deleteUser(Request $request, User $user)
+    public function deleteUser(Request $request, User $user):RedirectResponse
     {
-        $roles = ['admin, superAdmin'];
+        /** @var \App\Models\User $AuthUser */
+        $AuthUser = auth()->user();
 
-        if (in_array($request->user()->role, $roles) && $user->role == 'user') {
-            $user->delete();
-        }
-
-        return redirect('/admin/dashboard')->with('success', "user $user->name is now $user->role!");
-    }
-
-    public function addUser(Request $request)
-    {
         $roles = ['admin', 'superAdmin'];
-        if (in_array(auth()->user()->role, $roles)) {
+
+        if (in_array($AuthUser->role, $roles) && $user->role == 'user') {
+            $user->delete();
+        return redirect('/admin/dashboard')->with('success', "user $user->name is now $user->role!");
+        }
+        abort(  403,'not authorized');
+    }
+
+    public function addUser(Request $request):RedirectResponse
+    {
+        /** @var \App\Models\User $user */
+        $user = auth()->user();
+
+        $roles = ['admin', 'superAdmin'];
+        if (in_array($user->role, $roles)) {
 
             $validated = $request->validate([
                 'name' => ['required', 'string', 'max:255'],
@@ -64,15 +84,12 @@ class AdminController extends Controller
                 'password' => ['required', 'confirmed', Rules\Password::defaults()],
                 'role' => ['string', 'in:admin,user'],
             ]);
-            $user = User::create([
-                'name' => $validated['name'],
-                'email' => $validated['email'],
-                'password' => Hash::make($validated['password']),
-                'role' => $validated['role'],
-            ]);
+            $validated['password'] = Hash::make($validated['password']);
+            $user = User::create($validated);
 
             return redirect('/admin/dashboard');
 
         }
+        abort(  403,'not authorized');
     }
 }

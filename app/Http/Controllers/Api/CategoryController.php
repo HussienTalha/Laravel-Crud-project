@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\User;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,7 +16,7 @@ class CategoryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index():JsonResponse
     {
         $categories = Category::all();
 
@@ -24,9 +26,13 @@ class CategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request):JsonResponse
     {
-        if (Auth::user()->role == 'admin') {
+        /**
+         * @var User $user
+         */
+        $user = Auth::user();
+        if ($user->role == 'admin') {
             $validated = $request->validate(
                 [
                     'category_name' => 'required|string|unique',
@@ -49,7 +55,7 @@ class CategoryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Category $category)
+    public function show(Category $category):JsonResponse
     {
             /**
              *  @var \App\Models\Category $category
@@ -65,10 +71,10 @@ class CategoryController extends Controller
                 return [
                     'title' => $post->title,
                     'id' => $post->id,
-                    'author' => [
+                    'author' =>$post->user? [
                         'id' => $post->user_id,
                         'name' => $post->user->name,
-                    ],
+                    ]:null,
                 ];
             }),
         ];
@@ -79,9 +85,14 @@ class CategoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Post $post)
+    public function update(Request $request, Post $post):JsonResponse
     {
-        if ($request->user()->role == 'admin') {
+
+        /**
+         * @var User $user
+         */
+        $user = Auth::user();
+        if ($user->role == 'admin') {
             $validated = $request->validate(
                 [
                     'category_name' => 'required|unique',
@@ -102,9 +113,13 @@ class CategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function delete(Post $post)
+    public function delete(Post $post):JsonResponse
     {
-        if (Auth::user()->role == 'admin') {
+        /**
+         * @var User $user
+         */
+        $user = Auth::user();
+        if ($user->role == 'admin') {
             $post->delete();
 
             return response()->json([

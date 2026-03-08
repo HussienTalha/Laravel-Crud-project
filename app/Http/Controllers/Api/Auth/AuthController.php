@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    public function login(Request $request)
+    public function login(Request $request):string
     {
         $credintials = $request->validate([
             'email' => 'required|email',
@@ -22,6 +22,9 @@ class AuthController extends Controller
                 'message' => 'wrong credintials!',
             ], 404);
         }
+        /**
+         * @var User $user
+         */
         $user = Auth::user();
         if ($user->role == 'admin') {
             $token = $user->createToken("$user->name token", ['actions on category']);
@@ -40,7 +43,7 @@ class AuthController extends Controller
 
     }
 
-    public function register(Request $request)
+    public function register(Request $request):string
     {
         $validated = $request->validate(
             [
@@ -74,9 +77,13 @@ class AuthController extends Controller
 
     }
 
-    public function logout(Request $request)
+    public function logout(Request $request):string
     {
-        $token = $request->user()->currentAccesstoken()->delete();
+        /**
+         * @var User $user
+         */
+        $user = $request->user;
+        $token = $user->currentAccesstoken()->delete();
 
         return response()->json([
             'message' => 'user logged out',
