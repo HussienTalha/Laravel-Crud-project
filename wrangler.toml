@@ -1,0 +1,29 @@
+# wrangler.toml
+name = "talha-blog"
+compatibility_date = "2024-01-01"
+compatibility_flags = ["nodejs_compat"]
+
+# Default (production) configuration
+[vars]
+APP_ENV = "production"
+APP_DEBUG = "false"
+DB_CONNECTION = "sqlite"
+DB_DATABASE = "../database/database.sqlite"
+
+# Production routes
+[[routes]]
+pattern = "yourdomain.com"
+custom_domain = true
+
+# Staging environment
+[env.staging]
+name = "laravel-app-staging"
+vars = { APP_ENV = "staging", APP_DEBUG = "true", DB_DATABASE = "../database/database.sqlite" }
+
+[[env.staging.routes]]
+pattern = "staging.yourdomain.com"
+custom_domain = true
+
+# Local development environment (for wrangler dev)
+[env.dev]
+vars = { APP_ENV = "local", APP_DEBUG = "true", DB_DATABASE = "../database/database.sqlite" }
