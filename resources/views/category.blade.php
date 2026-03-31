@@ -149,7 +149,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="/posts" method="POST">
+                    <form action="/posts" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="mb-3">
                             <label for="Title" class="form-label" >Title</label>
@@ -166,8 +166,8 @@
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label for="image" class="form-label">Upload Image</label>
-                            <input type="file" name="image" id="image">
+                          <label for="image" class="form-label">Upload Image</label>
+                            <input class="form-control" type="file" name="image" id="image" accept="image/*">
                         </div>
                 </div>
                 <div class="modal-footer">
