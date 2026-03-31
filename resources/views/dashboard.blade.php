@@ -204,6 +204,7 @@
         
 
         <!-- Quick Actions -->
+        <!--
         <div class="row">
             <div class="col-12">
                 <div class="card shadow mb-4">
@@ -271,8 +272,7 @@
         </div>
     </div>
 
-    >
-
+-->
 <!-- Categories Modals -->
 
      <!-- Add Category Modal -->
