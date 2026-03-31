@@ -82,7 +82,7 @@ class CategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function delete(Category $category):RedirectResponse
+    public function destroy(Category $category):RedirectResponse
     {
         /**
          * @var Category $uncategorized
