@@ -20,9 +20,9 @@ class PostFactory extends Factory
     public function definition(): array
     {
         return [
-            'title' => fake()->sentence(),
-            'post' => fake()->text(500),
-            'status' => fake()->randomElement(['created', 'edited']),
+            'title' => $this->faker->sentence(),
+            'post' => $this->faker->text(500),
+            'status' => $this->faker->randomElement(['created', 'edited']),
         ];
     }
 }

@@ -19,7 +19,7 @@ class CategoryFactory extends Factory
     public function definition(): array
     {
         return [
-            'Category_name' => fake()->unique()->word(),
+            'Category_name' => $this->faker->unique()->word(),
         ];
     }
 }
