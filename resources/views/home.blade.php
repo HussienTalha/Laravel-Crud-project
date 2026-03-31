@@ -8,7 +8,7 @@
                     @auth
                     <p class="lead mb-0">Welcome back, {{ auth()->user()->name ?? 'User' }}!</p>
                 </div>
-                @if(!$posts)
+                @if(!$posts->count())
                  <div class="text-center my-5">
                         <p>Be The First One To Create A Post</p>
                         @endif
@@ -22,7 +22,7 @@
 
         </header>
         
-        @if($posts)
+        @if($posts->count())
      <!-- Page content-->
         <div class="container">
             <div class="row">
