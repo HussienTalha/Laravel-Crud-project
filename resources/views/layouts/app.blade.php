@@ -32,7 +32,7 @@
                             @if(auth()->user()->role === 'admin' || auth()->user()->role=='superAdmin')
                             @if (Route::has('dashboard'))
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('dashboard') }}">Dashboard</a>
+                                    <a class="nav-link" href="{{ uri('/admin/dashboard') }}">Dashboard</a>
                                 </li>
                             @endif
                             @endif
