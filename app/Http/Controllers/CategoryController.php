@@ -87,7 +87,7 @@ class CategoryController extends Controller
         /**
          * @var Category $uncategorized
          */
-        $uncategorized = Category::where('Category_name', '=', 'Uncategorized')->first();
+        $uncategorized = Category::where('category_name', '=', 'Uncategorized')->first();
         /**
          * @var Post $affected_posts 
          */
