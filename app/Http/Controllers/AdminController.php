@@ -33,9 +33,9 @@ class AdminController extends Controller
     public function makeAdmin(Request $request, User $user):RedirectResponse
     {
         /** @var \App\Models\User $user */
-        $user = auth()->user();
+        $auth_user = auth()->user();
 
-        if ($user->role == 'admin') {
+        if ($auth_user->role == 'admin') {
             $user->update(['role' => 'admin']);
 
             return redirect('/admin/dashboard')->with('success', "user $user->name is now $user->role!");
