@@ -47,7 +47,7 @@ class PostController extends Controller
         }
         
 
-        $user->create($validated + ['status' => 'created']);
+        Post::create($validated + ['status' => 'created','user_id'=>$user->id]);
 
         return redirect('/')->with('success', 'post created');
     }
