@@ -8,15 +8,21 @@
                     @auth
                     <p class="lead mb-0">Welcome back, {{ auth()->user()->name ?? 'User' }}!</p>
                 </div>
+                @if(!$posts)
                  <div class="text-center my-5">
+                        <p>Be The First One To Create A Post</p>
+                        @endif
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newPostModal">
                             <i class="fas fa-plus me-2">Create Post</i>
                         </button>
                 @endauth
                 </div>
             </div>
+
+
         </header>
         
+        @if($posts)
      <!-- Page content-->
         <div class="container">
             <div class="row">
@@ -132,6 +138,7 @@
                 </div>
             </div>
         </div>
+        @endif
     
     <!-- Create Post Modal -->
 <div>
