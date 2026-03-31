@@ -31,7 +31,7 @@ Route::controller(PostController::class)->group(function () {
     Route::middleware('auth')->group(function () {
         Route::put('/posts/{post}/edit', 'update');
         Route::post('/posts', 'store');
-        Route::delete('/posts/{post}/delete', 'destroy');
+        Route::delete('/posts/{post}/delete', 'delete');
     });
 });
 Route::controller(CategoryController::class)->group(function () {
