@@ -35,13 +35,9 @@
                                     <a class="nav-link" href="{{ route('dashboard') }}">Dashboard</a>
                                 </li>
                             @endif
-                            @php
-                            
-                            $id = auth()->user()->id;
-                            @endphp
                             @endif
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ uri("/users/{$id}")}}"> Profile </a>
+                            <a class="nav-link" href="{{ uri('/users/'.auth()->user()->id)}}"> Profile </a>
                         </li>
                         @endauth
                     </ul>
