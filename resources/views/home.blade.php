@@ -8,8 +8,8 @@
                     @auth
                     <p class="lead mb-0">Welcome back, {{ auth()->user()->name ?? 'User' }}!</p>
                 </div>
-                @if(!$posts->count())
                  <div class="text-center my-5">
+                        @if(!$posts->count())
                         <p>Be The First One To Create A Post</p>
                         @endif
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newPostModal">
