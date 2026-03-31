@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [PostController::class, 'index']);
 Route::get('/users/{user}', [ProfileController::class, 'show']);
 
-Route::controller(AdminController::class)->middleware(['auth', 'verified', 'checkRole'])->group(function () {
+Route::controller(AdminController::class)->middleware(['auth', 'checkRole'])->group(function () {
 
     Route::get('/admin/dashboard', 'index')->name('dashboard');
     Route::put('/admin/{user}/makeAdmin', 'makeAdmin');
