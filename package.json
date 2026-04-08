@@ -1,28 +1,31 @@
 {
-    "$schema": "https://www.schemastore.org/package.json",
-    "private": true,
-    "type": "module",
-    "scripts": {
-        "build": "node resources/js/build-helper.js",
-        "dev": "node resources/js/build-helper.js --dev",
-        "build:raw": "vite build",
-        "dev:raw": "vite",
-        "build:verbose": "vite build --mode development",
-        "preview": "vite preview"
-    },
-    "devDependencies": {
-        "@popperjs/core": "^2.11.8",
-        "@tailwindcss/vite": "^4.0.0",
-        "alpinejs": "^3.4.2",
-        "axios": "^1.11.0",
-        "bootstrap": "^5.3.8",
-        "concurrently": "^9.0.1",
-        "laravel-vite-plugin": "^2.0.0",
-        "sass": "^1.97.3",
-        "vite": "^7.0.7"
-    },
-    "dependencies": {
-        "g": "^2.0.1",
-        "npm": "^11.8.0"
-    }
+  "$schema": "https://www.schemastore.org/package.json",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node resources/js/build-helper.js",
+    "dev": "node resources/js/build-helper.js --dev",
+    "build:raw": "vite build",
+    "dev:raw": "vite",
+    "build:verbose": "vite build --mode development",
+    "preview": "npm run build:raw && wrangler dev",
+    "deploy": "npm run build:raw && wrangler deploy"
+  },
+  "devDependencies": {
+    "@cloudflare/vite-plugin": "^1.30.0",
+    "@popperjs/core": "^2.11.8",
+    "@tailwindcss/vite": "^4.0.0",
+    "alpinejs": "^3.4.2",
+    "axios": "^1.11.0",
+    "bootstrap": "^5.3.8",
+    "concurrently": "^9.0.1",
+    "laravel-vite-plugin": "^2.0.0",
+    "sass": "^1.97.3",
+    "vite": "^7.0.7",
+    "wrangler": "^4.76.0"
+  },
+  "dependencies": {
+    "g": "^2.0.1",
+    "npm": "^11.8.0"
+  }
 }
