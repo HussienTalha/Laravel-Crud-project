@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Api\ApiController;
 use Illuminate\Http\JsonResponse;
 use App\Models\User;
 use App\Models\Post;
@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
-class UserController extends Controller
+class UserController extends ApiController
 {
     public function index():JsonResponse
     {
@@ -48,7 +48,7 @@ class UserController extends Controller
                     'role' => $user->role,
                     'abilities' => $user->currentAccessToken()->abilities,
                 ],
-                'posts' => $posts->map(function (Post $post , int $key) {
+                'posts' => $posts->map(function (Post $post) {
                    return [
                         'id' => $post->id,
                         'title' => $post->title,

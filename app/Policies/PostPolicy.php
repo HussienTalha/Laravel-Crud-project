@@ -7,10 +7,6 @@ use App\Models\User;
 
 class PostPolicy
 {
-    public function create(User $user): bool
-    {
-        return false;
-    }
 
     /**
      * Determine whether the user can update the model.

@@ -21,21 +21,21 @@ class AdminController extends Controller
         $roles = ['admin', 'superAdmin'];
         if (in_array($user->role, $roles)) {
             $users = User::all();
-            $users_count = $users->count();
+            $usersCount = $users->count();
             $categories = Category::all();
-            $categories_count = $categories->count();
+            $categoriesCount = $categories->count();
 
-            return view('dashboard', compact('categories', 'categories_count', 'users', 'users_count'));
+            return view('dashboard', compact('categories', 'categoriesCount', 'users', 'usersCount'));
         }
         abort(  403,'not authorized');
     }
 
-    public function makeAdmin(Request $request, User $user):RedirectResponse
+    public function makeAdmin(User $user):RedirectResponse
     {
         /** @var \App\Models\User $user */
-        $auth_user = auth()->user();
+        $authUser = auth()->user();
 
-        if ($auth_user->role == 'admin') {
+        if ($authUser?->role == 'admin') {
             $user->update(['role' => 'admin']);
 
             return redirect('/admin/dashboard')->with('success', "user $user->name is now $user->role!");
@@ -43,12 +43,12 @@ class AdminController extends Controller
         abort(  403,'not authorized');
     }
 
-    public function deleteAdmin(Request $request, User $user):mixed
+    public function deleteAdmin( User $user):mixed
     {
-        /** @var \App\Models\User $AuthUser */
-        $AuthUser = auth()->user();
+        /** @var \App\Models\User $authUser */
+        $authUser = auth()->user();
         
-        if ($AuthUser->role == 'admin') {
+        if ($authUser->role == 'admin') {
             $user->update(['role' => 'user']);
         return redirect('/admin/dashboard')->with('success', "user $user->name is now $user->role!");
         }
@@ -56,14 +56,14 @@ class AdminController extends Controller
         abort(  403,'not authorized');
     }
 
-    public function deleteUser(Request $request, User $user):RedirectResponse
+    public function deleteUser(User $user):RedirectResponse
     {
-        /** @var \App\Models\User $AuthUser */
-        $AuthUser = auth()->user();
+        /** @var \App\Models\User $authUser */
+        $authUser = auth()->user();
 
         $roles = ['admin', 'superAdmin'];
 
-        if (in_array($AuthUser->role, $roles) && $user->role == 'user') {
+        if (in_array($authUser->role, $roles) && $user->role == 'user') {
             $user->delete();
         return redirect('/admin/dashboard')->with('success', "user $user->name is now $user->role!");
         }

@@ -4,14 +4,14 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Api\ApiController;
 use App\Models\Category;
 use App\Models\User;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class CategoryController extends Controller
+class CategoryController extends ApiController
 {
     /**
      * Display a listing of the resource.
@@ -63,7 +63,7 @@ class CategoryController extends Controller
 
         $category = $category->load(['posts:id,title,user_id,category_id', 'posts.user:id,name']);
         // $category_posts = $category->posts()->with(['user:id,name'])->get();
-        $formated_category = [
+        $formatedCategory = [
             'id' => $category->id,
             'category name' => $category->category_name,
 
@@ -79,7 +79,7 @@ class CategoryController extends Controller
             }),
         ];
 
-        return response()->json($formated_category, 200);
+        return response()->json($formatedCategory, 200);
     }
 
     /**

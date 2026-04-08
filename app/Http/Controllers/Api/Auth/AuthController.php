@@ -83,7 +83,7 @@ class AuthController extends Controller
          * @var User $user
          */
         $user = $request->user;
-        $token = $user->currentAccesstoken()->delete();
+        $user->currentAccesstoken()->delete();
 
         return response()->json([
             'message' => 'user logged out',

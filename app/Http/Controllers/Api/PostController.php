@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Api\ApiController;
 use Illuminate\Http\JsonResponse;
 use App\Models\Post;
 use App\Models\User;
@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
-class PostController extends Controller
+class PostController extends ApiController
 {
     /**
      * Display a listing of the resource.
@@ -18,7 +18,7 @@ class PostController extends Controller
     public function index():JsonResponse
     {
         $posts = Post::with(['user:id,name', 'category:id,category_name'])->get();
-        $formantted_posts = $posts->map(function ($post) {
+        $formanttedPosts = $posts->map(function ($post) {
             return [
                 'title' => $post->title,
                 'content' => $post->post,
@@ -35,7 +35,7 @@ class PostController extends Controller
             ];
         });
 
-        return response()->json($formantted_posts, 200);
+        return response()->json($formanttedPosts, 200);
     }
 
     /**

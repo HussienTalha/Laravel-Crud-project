@@ -87,11 +87,10 @@ class CategoryController extends Controller
         /**
          * @var Category $uncategorized
          */
+
         $uncategorized = Category::where('category_name', '=', 'Uncategorized')->first();
-        /**
-         * @var Post $affected_posts 
-         */
-        $affected_posts = Post::where('category_id', '=', $category->id)->update(['category_id' => $uncategorized->id]);
+
+        Post::where('category_id', '=', $category->id)->update(['category_id' => $uncategorized->id]);
         $this->authorize('delete', Category::class);
         $category->delete();
 
